@@ -3,6 +3,7 @@
 import json
 
 from elasticsearch import Elasticsearch
+from elasticsearch import RequestsHttpConnection
 from elasticsearch.helpers import bulk
 
 from datafaker.dbs.basedb import BaseDB
@@ -16,7 +17,7 @@ class EsDB(BaseDB):
         auth = None
         if self.args.auth:
             auth = self.args.auth.split(':')
-        self.es = Elasticsearch(self.args.connect.split(','), http_auth=auth)
+        self.es = Elasticsearch(self.args.connect.split(','),connection_class=RequestsHttpConnection, use_ssl=True, verify_certs=False, ssl_show_warn=False, http_auth=auth)
         self.index, self.type = self.args.table.split('/')
 
     def construct_self_rows(self):
